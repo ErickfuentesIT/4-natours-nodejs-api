@@ -2,8 +2,19 @@ const express = require('express');
 const fs = require('fs');
 
 const app = express();
-
+// 1) MIDDLEWARES
+// app.use(morgan('dev'));
 app.use(express.json()); // MIDDLEWARE FOR POST TO RECEIVE THE REQUEST
+
+app.use((req, res, next) => {
+  console.log('Hello from the middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 // app.get('/', (req, res) => {
 //   res
@@ -18,10 +29,12 @@ app.use(express.json()); // MIDDLEWARE FOR POST TO RECEIVE THE REQUEST
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
-
+// 2) ROUTE HANDLERS
 const getTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestedAt: req.requestTime,
     results: tours.length,
     data: {
       tours,
@@ -100,6 +113,7 @@ const deleteTour = (req, res) => {
 // // DELETE TOUR
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+// 4) ROUTES
 // Clenear way declaring routes
 app.route('/api/v1/tours').get(getTours).post(createTour);
 app
@@ -107,7 +121,7 @@ app
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
-
+// 5) START SERVER
 const port = 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
