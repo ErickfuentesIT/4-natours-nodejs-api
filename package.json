@@ -1,0 +1,14 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Learning node, express and mongoDB",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "Erick Fuentes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
